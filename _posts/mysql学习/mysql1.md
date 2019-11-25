@@ -1,0 +1,120 @@
+---
+layout: post
+title: mysql编译以及使用trace跟踪查看数据库处理
+category: dump
+description: 南大通用mysql培训
+---
+
+#mysql编译
+---
+安装字符终端下屏幕控制的基本库
+
+```
+    yum install ncurses-devel -y  
+```
+
+安装成功  
+```
+Installed:ncurses-devel.x86_64 0:5.9-14.20130511.el7_4 Complete!  
+```
+---
+
+安装cmake 
+
+```
+yum install -y gcc gcc-c++ make automake
+yum install -y wget
+wget http://www.cmake.org/files/v2.8/cmake-2.8.10.2.tar.gz
+tar -zxvf cmake-2.8.10.2.tar.gz
+cd cmake-2.8.10.2
+./bootstrap
+make && make install
+```
+---
+
+解压缩mysql依赖的boost库
+```
+unzip boost.zip
+```
+---
+
+准备编译mysql
+```
+cmake ../mysql-5.7.20 -DCMAKE_BUILD_TYPE=Debug -DWITH_BOOST=\<boost库文件夹地址\>
+```
+---
+
+编译安装mysql
+```
+make -j 10 //启动十个线程并行编译
+make install
+```
+---
+
+初始化数据库
+```
+/usr/local/mysql/bin/mysqld --initialize-insecure
+```
+
+打出信息
+```
+2019-11-25T15:35:15.664904Z 0 [Warning] InnoDB: New log files created, LSN=45790
+2019-11-25T15:35:15.874561Z 0 [Warning] InnoDB: Creating foreign key constraint system tables.
+2019-11-25T15:35:15.960735Z 0 [Warning] No existing UUID has been found, so we assume that this is the first time that this server has been started. Generating a new UUID: 2db71295-0f99-11ea-81f3-525400b3fc1d.
+2019-11-25T15:35:15.966273Z 0 [Warning] Gtid table is not ready to be used. Table 'mysql.gtid_executed' cannot be opened.
+2019-11-25T15:35:15.967183Z 1 [Warning] root@localhost is created with an empty password ! Please consider switching off the --initialize-insecure option.
+```
+
+---
+启动mysql服务
+```
+/usr/local/mysql/bin/mysqld &
+```
+启动的log
+```
+[root@VM_0_9_centos mysql-build]# 2019-11-25T15:36:11.926667Z 0 [Warning] TIMESTAMP with implicit DEFAULT value is deprecated. Please use --explicit_defaults_for_timestamp server option (see documentation for more details).
+2019-11-25T15:36:11.926798Z 0 [Note] --secure-file-priv is set to NULL. Operations related to importing and exporting data are disabled
+2019-11-25T15:36:11.926854Z 0 [Note] /usr/local/mysql/bin/mysqld (mysqld 5.7.20-debug) starting as process 2144 ...
+2019-11-25T15:36:11.931391Z 0 [ERROR] Fatal error: Please read "Security" section of the manual to find out how to run mysqld as root!
+
+2019-11-25T15:36:11.931436Z 0 [ERROR] Aborting
+
+2019-11-25T15:36:11.931461Z 0 [Note] Binlog end
+2019-11-25T15:36:11.931686Z 0 [Note] /usr/local/mysql/bin/mysqld: Shutdown complete
+```
+启动错误 我枯了 加上了 --user=root 就好了(去掉&)
+```
+2019-11-25T15:42:00.918732Z 0 [Note] InnoDB: Loading buffer pool(s) from /var/lib/mysql/ib_buffer_pool
+2019-11-25T15:42:00.927648Z 0 [Note] InnoDB: Buffer pool(s) load completed at 191125 23:42:00
+2019-11-25T15:42:00.932203Z 0 [Note] Server hostname (bind-address): '*'; port: 3306
+2019-11-25T15:42:00.932254Z 0 [Note] IPv6 is available.
+2019-11-25T15:42:00.932267Z 0 [Note]   - '::' resolves to '::';
+2019-11-25T15:42:00.932292Z 0 [Note] Server socket created on IP: '::'.
+2019-11-25T15:42:00.968781Z 0 [Note] Event Scheduler: Loaded 0 events
+2019-11-25T15:42:00.969248Z 0 [Note] /usr/local/mysql/bin/mysqld: ready for connections.
+Version: '5.7.20-debug'  socket: '/var/lib/mysql/mysql.sock'  port: 3306  Source distribution
+2019-11-25T15:42:00.969262Z 0 [Note] Executing 'SELECT * FROM INFORMATION_SCHEMA.TABLES;' to get a list of tables using the deprecated partition engine. You may use the startup option '--disable-partition-engine-check' to skip this check. 
+2019-11-25T15:42:00.969267Z 0 [Note] Beginning of list of non-natively partitioned tables
+2019-11-25T15:42:00.994032Z 0 [Note] End of list of non-natively partitioned tables
+```
+此时发现 socket 建立在/var/lib/mysql/mysql.sock上
+---
+
+启动客户端，并且连接到上面的sock文件上
+```
+/usr/local/mysql/bin/mysql -uroot --socket=/var/lib/mysql/mysql.sock
+```
+连接成功  至此 完成编译
+```
+Server version: 5.7.20-debug Source distribution
+
+Copyright (c) 2000, 2017, Oracle and/or its affiliates. All rights reserved.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql> 
+```
