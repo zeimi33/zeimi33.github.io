@@ -98,6 +98,7 @@ Version: '5.7.20-debug'  socket: '/var/lib/mysql/mysql.sock'  port: 3306  Source
 2019-11-25T15:42:00.994032Z 0 [Note] End of list of non-natively partitioned tables
 ```
 此时发现 socket 建立在/var/lib/mysql/mysql.sock上
+
 ---
 
 启动客户端，并且连接到上面的sock文件上
