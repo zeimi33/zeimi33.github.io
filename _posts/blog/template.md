@@ -1,7 +1,7 @@
 ---
 layout: post
-title: 只言
-description: Die Liebe zu Welt.
+title: mysql中使用trace追踪数据库操作
+description: 南大通用mysql源码解析
 category: blog
 ---
 
@@ -9,4 +9,3 @@ category: blog
 
 
 
-[Mukosame]:    http://mukosame.github.io  "Mukosame"
