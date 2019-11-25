@@ -1,7 +1,7 @@
 ---
 layout:     post
 title: 单身、安全感以及独生子女   
-category: blog
+category: 分布式学习
 description: 夜里的胡思乱想。
 ---
 单身本身会对我造成压力：会产生没有被惦记着的惶恐感，没有被认可的焦虑感，同时缺乏了安全感。
