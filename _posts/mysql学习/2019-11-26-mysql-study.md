@@ -111,22 +111,26 @@ yum -y install mysql-devel
 ```
 show variables like 'plugin_dir';
 ```
+```
 +---------------+------------------------------+
 | Variable_name | Value                        |
 +---------------+------------------------------+
 | plugin_dir    | /usr/local/mysql/lib/plugin/ |
 +---------------+------------------------------+
+```
 可以看到 我们的路径在 ```/usr/local/mysql/lib/plugin/``` 下
 所以把刚编译好的so文件 放在这个路径下
 
 在mysql cli中 我们使用``` create function str_trim RETURNS string SONAME 'udf_str.so';```创建mysql函数
 
 创建好可以使用命令```select * from mysql.func;```查看
+```
 +----------+-----+------------+----------+
 | name     | ret | dl         | type     |
 +----------+-----+------------+----------+
 | str_trim |   0 | udf_str.so | function |
 +----------+-----+------------+----------+
+```
 
 到此为止 创建成功
 
