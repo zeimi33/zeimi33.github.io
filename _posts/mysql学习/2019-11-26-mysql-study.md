@@ -6,40 +6,40 @@ description: 南大通用mysql培训
 ---
 
 --- 
-#mysql执行流程
-##1.初始化
-##2.命令分发（没有做语法解析）
-##3.命令解析（语法解析）
+# mysql执行流程
+## 1.初始化
+## 2.命令分发（没有做语法解析）
+## 3.命令解析（语法解析）
 1.bison 通过 sql_yacc.yy 解析
 2.sql_yacc.yy 可以编译成 .cc和.h文件
-##4.各种命令对应不同的模块
-##5.表的管理（数据一致性 加锁）
+## 4.各种命令对应不同的模块
+## 5.表的管理（数据一致性 加锁）
 ---
 
-#数据结构 THD
-####对每个客户端的连接 重建一个线程（一个连接对应一个线程）
-####MDL元数据锁
-####query_arena查询工作的地方
-####open_table_state打开表的状态
-##线程内变量
+# 数据结构 THD
+#### 对每个客户端的连接 重建一个线程（一个连接对应一个线程）
+#### MDL元数据锁
+#### query_arena查询工作的地方
+#### open_table_state打开表的状态
+## 线程内变量
 ```
 user_vars :包含了用户的各种信息
 m_db : 使用use语句 修改当前数据库变量
 m_catalog: 当前的目录
 ```
 
-#lex
-##table_list
-##select_(lex|unit)
+# lex
+## table_list
+## select_(lex|unit)
 
-#item
+# item
 
 + 与sql语句中的某个部分相关
 + 具有一个值
 + 具有一个数据类型描述符
 + 字面值 列引用 会话和全局变量 过程变量参数 sql函数
 
-##一个sql语句怎么表示的
+## 一个sql语句怎么表示的
 + main.unit 总的sql语句
 + fake0 表示假的数据指针（表达 limit和order by）
 + slave指针指向更小一层的select语句(可以找到所有的select语句)
