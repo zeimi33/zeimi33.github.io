@@ -1,6 +1,6 @@
 auto: true
 
-markdown: Redcarpet
+markdown: kramdown
 
 highlighter: 'rouge'
 #paginate: 8
