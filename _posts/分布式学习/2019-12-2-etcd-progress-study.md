@@ -6,7 +6,7 @@ description: etcd
 ---
 
 # 首先我们可以看到 progress的两个重要元素有三种状态
-+ progress中的两个重要元素 （）
++ progress中的两个重要元素 （match next）
 + match是leader知道的对于自己的更新状态
 + next将要复制的最新的元素序号
 + probe
@@ -16,6 +16,8 @@ description: etcd
 ## follower处于 probe状态
 + leader每次只发送一个replication message
 + 直到收到msgHeartbeatResp 或者收到 msgAppResp
+
+
 ## follower处于replicate状态
 +  当follower给leader发送rejct为false时 切换到replicate状态
 +  leader这是会以流方式向follower发送信息
@@ -37,6 +39,8 @@ description: etcd
 
 # 下面看这几个函数
 + 成为探测状态
+
+
 ```
 func (pr *Progress) becomeProbe() {
 	if pr.State == ProgressStateSnapshot {
