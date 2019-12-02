@@ -24,6 +24,8 @@ description: etcd
 
 ## main函数入口操作
 + 初始化cluster id kvport join proposeC ConfChangeC这几个变量
+
+
 ```
 cluster := flag.String("cluster", "http://127.0.0.1:9021", "comma separated cluster peers")
 	id := flag.Int("id", 1, "node ID")
@@ -38,16 +40,22 @@ cluster := flag.String("cluster", "http://127.0.0.1:9021", "comma separated clus
 ```
 
 + 定义一个getSnapshot函数（这个函数是将keyvalue通过json编码）这里使用了闭包，不用传递kvs即可调用方法
+
+
 ```
 getSnapshot := func() ([]byte, error) { return kvs.getSnapshot() }
 ```
 
 + 新建一个raft节点
+
+
 ```
 commitC, errorC, snapshotterReady := newRaftNode(*id, strings.Split(*cluster, ","), *join, getSnapshot, proposeC, confChangeC)
 ```
 
 + 定义好新的kv-Store  初始化kvstore snapshoter 并开启协程读取提交
+
+
 ```
 s := &kvstore{proposeC: proposeC, kvStore: make(map[string]string), snapshotter: snapshotter}
 	// replay log into key-value map
